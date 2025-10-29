@@ -62,14 +62,14 @@ func avgHandler(w http.ResponseWriter, r *http.Request) {
 func parseNums(s string) ([]int, error) {
 	parts := strings.Split(s, ",")
 	nums := make([]int, 0, len(parts))
-	for i, p := range parts {
-		n, err := strconv.Atoi(strings.TrimSpace(p))
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		n, err := strconv.Atoi(p)
 		if err != nil {
 			return nil, fmt.Errorf("invalid number %q: %w", p, err)
 		}
-		// BUG: this assigns by index into a zero-length slice and will panic.
-		// It should append to the slice instead.
-		nums[i] = n
+		// append parsed number to the slice instead of assigning by index
+		nums = append(nums, n)
 	}
 	return nums, nil
 }
